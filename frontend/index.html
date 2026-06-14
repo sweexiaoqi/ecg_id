@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG ID - Biometric Recognition Platform</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for live dashboard plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <!-- Global Header with ECG ID logo badge -->
+    <header class="global-header">
+        <div class="logo-badge" id="btn-logo-home">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            <span class="logo-text">ECG <span class="logo-highlight">ID</span></span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="app-container">
+
+        <!-- Screen 1: Main Screen -->
+        <section id="screen-main" class="screen active">
+            <h1 class="main-heading">
+                ECG-Based Biometric Recognition<br>
+                <span class="gradient-text">Through Continuous Streaming Learning</span>
+            </h1>
+            <div class="card-grid">
+                <!-- User Login Card -->
+                <div class="menu-card" id="card-user-login">
+                    <div class="menu-card-icon user-icon-bg">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h2>User Login</h2>
+                    <p>Authenticate via heartbeat matching using your recorded ECG profile.</p>
+                    <a href="#" class="register-link" id="link-go-register">New user? Register here.</a>
+                </div>
+
+                <!-- Developer Console Card -->
+                <div class="menu-card" id="card-dev-console">
+                    <div class="menu-card-icon dev-icon-bg">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="4 17 10 11 4 5"/>
+                            <line x1="12" y1="19" x2="20" y2="19"/>
+                        </svg>
+                    </div>
+                    <h2>Developer Console</h2>
+                    <p>Access calibration panel, network weights, and authentication logs.</p>
+                    <span class="card-badge">ADMIN</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 2: User Login Screen -->
+        <section id="screen-user-login" class="screen">
+            <div class="form-card max-width-card">
+                <div class="card-header">
+                    <div class="header-icon-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <h2>Upload ECG Recording</h2>
+                    <p class="subtitle">Authenticate your session using your biometric ECG profile</p>
+                </div>
+                
+                <!-- Drag and Drop Zone -->
+                <div class="upload-zone" id="login-upload-zone">
+                    <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.3-2-1.9-3.6-3.9-3.9C17 4.1 14.1 2 10.7 2.2c-2.7.2-5.1 2.1-5.7 4.8C2.6 7.5 1 10 1.5 12.8c.4 2.4 2.2 4.3 4.6 4.7H19c1.2 0 2.2-.5 3-1.5z"/>
+                        <polyline points="16 12 12 8 8 12"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                    </svg>
+                    <p class="upload-text">Drag & drop ECG recordings — supports .atr, .dat, .hea formats</p>
+                    <button class="btn btn-secondary" onclick="document.getElementById('login-file-input').click()">Browse Files</button>
+                    <input type="file" id="login-file-input" style="display: none;" accept=".dat,.csv,.txt,.hea,.atr" multiple>
+                    <div class="file-info-preview" id="login-file-info"></div>
+                </div>
+
+                <button class="btn btn-primary btn-block btn-success-color" id="btn-verify-ecg">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    VERIFY ECG & AUTHENTICATE
+                </button>
+                <button class="btn btn-link btn-block text-muted" id="btn-login-cancel">Back to Home</button>
+            </div>
+        </section>
+
+        <!-- Screen 3: Auth Approved -->
+        <section id="screen-auth-approved" class="screen">
+            <div class="result-card max-width-card approved-theme">
+                <div class="result-banner">
+                    <div class="result-icon-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <h2>Biometric Authentication Approved</h2>
+                </div>
+                <div class="result-body">
+                    <div class="stat-container">
+                        <span class="stat-label">MATCH ACCURACY SCORE</span>
+                        <span class="stat-value text-success" id="approved-accuracy">100.00%</span>
+                    </div>
+                    <div class="user-welcome-info">
+                        <p>Welcome back, <strong id="approved-username">User</strong>!</p>
+                        <p class="muted-text">Identity verified via template-matching continuous streaming TCN-OCL model.</p>
+                    </div>
+                    <button class="btn btn-primary btn-block" id="btn-approved-home">Main Screen</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 4: Auth Denied -->
+        <section id="screen-auth-denied" class="screen">
+            <div class="result-card max-width-card denied-theme">
+                <div class="result-body">
+                    <div class="denied-header">
+                        <div class="denied-icon-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-danger">Denied — User not found</h2>
+                        <p class="muted-text" id="denied-reason-text">No matching biometric profile exists in the template store, or similarity was below the 85% threshold.</p>
+                        <div class="accuracy-badge-denied" id="denied-accuracy-badge">Match Score: 64.2%</div>
+                    </div>
+
+                    <button class="btn btn-secondary btn-block" id="btn-denied-home">Main Screen</button>
+
+                    <!-- Auto-register section -->
+                    <div class="auto-register-prompt" id="denied-register-section">
+                        <div class="prompt-header">
+                            <svg class="prompt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="17" y1="11" x2="23" y2="11"/>
+                            </svg>
+                            <span>Register <strong id="denied-suggested-user">Person_01</strong> as New User</span>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="btn-denied-auto-register">REGISTER</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 5: New User Register -->
+        <section id="screen-register" class="screen">
+            <div class="form-card max-width-card">
+                <div class="card-header">
+                    <div class="header-icon-circle register-color-bg">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="17" y1="11" x2="23" y2="11"/>
+                        </svg>
+                    </div>
+                    <h2>New User</h2>
+                    <p class="subtitle">Enroll a new passwordless biometric ECG profile</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-username">USERNAME</label>
+                    <input type="text" id="register-username" placeholder="e.g. john_doe" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>ECG RECORDINGS (.dat, .csv, .txt)</label>
+                    <div class="upload-zone" id="register-upload-zone">
+                        <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.3-2-1.9-3.6-3.9-3.9C17 4.1 14.1 2 10.7 2.2c-2.7.2-5.1 2.1-5.7 4.8C2.6 7.5 1 10 1.5 12.8c.4 2.4 2.2 4.3 4.6 4.7H19c1.2 0 2.2-.5 3-1.5z"/>
+                            <polyline points="16 12 12 8 8 12"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                        </svg>
+                        <p class="upload-text">Drag & drop ECG recordings — supports .atr, .dat, .hea formats</p>
+                        <button class="btn btn-secondary" onclick="document.getElementById('register-file-input').click()">Browse Files</button>
+                        <input type="file" id="register-file-input" style="display: none;" accept=".dat,.csv,.txt,.hea,.atr" multiple>
+                        <div class="file-info-preview" id="register-file-info"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="btn-submit-register">REGISTER USER WITH ECG</button>
+                <button class="btn btn-link btn-block text-muted" id="btn-register-cancel">Cancel</button>
+            </div>
+        </section>
+
+        <!-- Screen 6: Enrollment Complete -->
+        <section id="screen-enrollment-complete" class="screen">
+            <div class="form-card max-width-card text-center">
+                <!-- Centered green animated checkmark -->
+                <div class="animated-checkmark-container">
+                    <svg class="checkmark-svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+                <h2>Enrollment Complete</h2>
+                <p class="success-subtext">
+                    Passwordless biometric profile for <strong id="enrolled-username">username</strong> successfully deployed to template matching directory. <span class="badge-accent">No retraining was required.</span>
+                </p>
+
+                <div class="button-group-row">
+                    <button class="btn btn-primary" id="btn-enroll-auth-now">AUTHENTICATE NOW</button>
+                    <button class="btn btn-secondary" id="btn-enroll-home">Main Screen</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 7: Developer Login -->
+        <section id="screen-dev-login" class="screen">
+            <div class="form-card max-width-card">
+                <div class="card-header">
+                    <div class="header-icon-circle dev-login-color-bg">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h2>Developer Console</h2>
+                    <p class="subtitle">Access password-protected administration panel</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="dev-password">PASSWORD</label>
+                    <input type="password" id="dev-password" placeholder="Enter password (default: admin123)" class="form-control">
+                </div>
+
+                <button class="btn btn-primary btn-block" id="btn-dev-login">LOGIN</button>
+                <button class="btn btn-link btn-block text-muted" id="btn-dev-login-cancel">Main Screen</button>
+            </div>
+        </section>
+
+        <!-- Screen 8: Developer Control & Calibration Dashboard -->
+        <section id="screen-dev-dashboard" class="screen dev-dashboard-screen">
+            <!-- Top Dashboard Bar -->
+            <div class="dashboard-header-bar">
+                <div class="db-title-group">
+                    <span class="db-top-label">ADMINISTRATION PORTAL</span>
+                    <h2 class="db-title">Developer Control & Calibration</h2>
+                </div>
+                <div class="db-user-actions">
+                    <div class="user-badge">
+                        <span class="status-indicator online"></span>
+                        <span id="dev-user-label">admin</span>
+                    </div>
+                    <button class="btn-icon-only" id="btn-db-refresh" title="Refresh Data">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btn-dev-logout">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Performance Line Chart Card -->
+                <div class="db-card chart-card">
+                    <div class="db-card-header">
+                        <h3>TCN-OCL Performance</h3>
+                        <span class="card-badge-outline">Live Streaming Accuracy</span>
+                    </div>
+                    <div class="chart-container-inner">
+                        <canvas id="tcnPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Current Accuracy Badge Card -->
+                <div class="db-card stat-badge-card">
+                    <div class="db-card-header">
+                        <h3>Model Readout</h3>
+                    </div>
+                    <div class="badge-stat-container">
+                        <div class="badge-stat-circle">
+                            <span class="badge-stat-number" id="dashboard-accuracy-badge">86.4%</span>
+                            <span class="badge-stat-label">Model Accuracy</span>
+                        </div>
+                        <p class="badge-stat-subtext">
+                            Dynamic similarity threshold calibrated at 85.0% for biometric isolation.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Login Records Log Table Card -->
+                <div class="db-card logs-card">
+                    <div class="db-card-header flex-between">
+                        <div class="header-left">
+                            <h3>Login Records Log</h3>
+                            <p class="card-subtitle">Real-time authentication streaming events</p>
+                        </div>
+                        
+                        <!-- Filter Tabs and Flash Button -->
+                        <div class="header-actions">
+                            <div class="filter-tabs">
+                                <button class="tab-btn active" data-filter="all">All</button>
+                                <button class="tab-btn" data-filter="success">Success</button>
+                                <button class="tab-btn" data-filter="denied">Denied</button>
+                                <button class="tab-btn" data-filter="error">Errors</button>
+                            </div>
+                            <button class="btn btn-danger btn-sm" id="btn-flash-logs">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
+                                Flash Logs
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Logs Table Container -->
+                    <div class="table-responsive">
+                        <table class="db-table" id="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Status Badge</th>
+                                    <th>Event Type</th>
+                                    <th>Username</th>
+                                    <th>Timestamp</th>
+                                    <th>Accuracy</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body">
+                                <!-- Dynamic logs loaded here -->
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">No records found. Click refresh or perform authentications.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Toast Alert -->
+    <div class="toast" id="global-toast">
+        <span class="toast-message" id="toast-message">Notification</span>
+    </div>
+
+    <!-- Application Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
